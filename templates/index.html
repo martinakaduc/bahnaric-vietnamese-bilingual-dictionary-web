@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Parallel Corpora</title>
+    <!-- DataTable-->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap5.css"
+    />
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <!-- Bootstrap Icons-->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <!-- Google fonts-->
+    <link
+      href="https://fonts.googleapis.com/css?family=Merriweather+Sans:400,700"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <!-- SimpleLightbox plugin CSS-->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/SimpleLightbox/2.1.0/simpleLightbox.min.css"
+      rel="stylesheet"
+    />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link
+      href="{{ url_for('static', filename='css/styles.css') }}"
+      rel="stylesheet"
+    />
+  </head>
+  <body id="ura-parallel-corpora">
+    <!-- Navigation-->
+    <nav
+      class="navbar navbar-expand-lg navbar-light fixed-top py-3"
+      id="mainNav"
+    >
+      <div class="container px-4 px-lg-5">
+        <a class="navbar-brand" href="#ura-parallel-corpora"
+          >URA Parallel Corpora</a
+        >
+        <button
+          class="navbar-toggler navbar-toggler-right"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarResponsive"
+          aria-controls="navbarResponsive"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ms-auto my-2 my-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="#kinh-bana">Ngữ liệu Kinh - Ba-na</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#bana-kinh">Ngữ liệu Ba-na - Kinh</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- Masthead-->
+    <header class="masthead">
+      <div class="container px-4 px-lg-5 h-100">
+        <div
+          class="row gx-4 gx-lg-5 h-100 align-items-center justify-content-center text-center"
+        >
+          <div class="col-lg-8 align-self-end">
+            <h1 class="text-white font-weight-bold">
+              Kho ngữ liệu song ngữ tiếng Ba-na
+            </h1>
+            <hr class="divider" />
+          </div>
+          <div class="col-lg-8 align-self-baseline">
+            <p class="text-white-75 mb-5">
+              Tra cứu tiếng Ba-na và nghe phát âm từ ba phương ngữ Bình Định,
+              Kon Tum, Gia Lai.
+            </p>
+            <a class="btn btn-primary btn-xl" href="#kinh-bana">Bắt đầu</a>
+          </div>
+        </div>
+      </div>
+    </header>
+    <!--Kinh- Bana-->
+    <section class="page-section" id="kinh-bana">
+      <div class="container px-4 px-lg-5">
+        <h2 class="text-center mt-0">Ngữ liệu Kinh Ba-na</h2>
+        <hr class="divider" />
+        <div class="row gx-4 gx-lg-5">
+          <div class="col-lg-8-text-left">
+            <div class="row align-middle">
+              <div class="col-9">
+                <table id="data" class="table text-black mb-4 text-left">
+                  <thead>
+                    <tr class="text-primary">
+                      <th>Tiếng Kinh</th>
+                      <th>Tiếng Ba-na</th>
+                      <th>Từ loại</th>
+                      <th>Bình Định</th>
+                      <th>Kon Tum</th>
+                      <th>Gia Lai</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+              <div class="col-3 h-100" id="word-detail">
+                <div class="card">
+                  <div class="card-body">
+                    <h2 class="card-title">Chọn một từ</h2>
+                    <h6 class="card-subtitle mb-2 text-muted">Để hiển thị từ loại</h6>
+                    <p class="card-text">Và bản dịch tiếng Ba-na.</p>
+                    <div class="row my-2 justify-content-center">
+                      <button type="button" class="btn btn-primary w-50 text-left">🔊 Bình Định</button>
+                    </div>
+                    <div class="row my-2 justify-content-center">
+                      <button type="button" class="btn btn-primary w-50 text-left">🔊 Kon Tum</button>
+                    </div>
+                    <div class="row my-2 justify-content-center">
+                      <button type="button" class="btn btn-primary w-50 text-left">🔊 Gia Lai</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Footer-->
+    <footer class="bg-light py-5">
+      <div class="container px-4 px-lg-5">
+        <div class="small text-center text-muted">
+          Copyright &copy; 2022 - URA HCMUT
+        </div>
+      </div>
+    </footer>
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- SimpleLightbox plugin JS-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/SimpleLightbox/2.1.0/simpleLightbox.min.js"></script>
+    <!-- Core theme JS-->
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+    <script
+      type="text/javascript"
+      charset="utf8"
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      charset="utf8"
+      src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"
+    ></script>
+    <script
+      type="text/javascript"
+      charset="utf8"
+      src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.js"
+    ></script>
+    <script>
+      $(document).ready(function () {
+        var table = $("#data").DataTable({
+          ajax: "/api/data",
+          serverSide: true,
+          columns: [
+            { data: "vietnamese", orderable: false, width: "30%" },
+            { data: "bahnaric", orderable: false, width: "20%" },
+            { data: "pos", orderable: false, width: "10%" },
+            { data: "binhdinh", orderable: false },
+            { data: "kontum", orderable: false },
+            { data: "gialai", orderable: false },
+          ],
+          "order":[],
+          language: {
+            lengthMenu: "Hiển thị _MENU_ kết quả",
+            search: "Tìm kiếm:",
+            zeroRecords: "Không có dữ liệu",
+            info: "Trang _PAGE_/_PAGES_",
+            infoEmpty: "Không tìm thấy",
+            infoFiltered: "(tổng cộng _MAX_ kết quả)",
+            paginate: {
+              first: "Trang đầu",
+              previous: "Trang trước",
+              next: "Trang sau",
+              last: "Trang cuối",
+            },
+          },
+        });
+        $("#data tbody").on("click", "tr", function () {
+          const row = table.row(this).data();
+          console.log(row);
+          const myJSON = JSON.stringify(row);
+          console.log(myJSON);
+        });
+      });
+    </script>
+  </body>
+</html>
