@@ -1,11 +1,15 @@
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
+import os
 app = Flask(__name__)
+
+dir = os.path.dirname(__file__)
+db_path = os.path.join(dir, 'database.db')
 
 # the name of the database; add path if necessary
 db_name = 'D:\Developer\datatable_corpora\database.db'
 new_db_name = 'D:\Developer\datatable_corpora\\vie_database.db'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + new_db_name
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + db_path
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'mysecretkey'
 # this variable, db, will be used for all SQLAlchemy commands
