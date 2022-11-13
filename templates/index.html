@@ -122,22 +122,40 @@
                 </table>
               </div>
               <div class="col-3 h-100" id="word-detail">
-                <div class="card">
+                <!-- START SAMPLE CARD -->
+                <div id="sample" class="card">
                   <div class="card-body">
-                    <h2 class="card-title">Chọn một từ</h2>
+                    <h2 id="card-">Chọn một từ</h2>
                     <h6 class="card-subtitle mb-2 text-muted">Để hiển thị từ loại</h6>
                     <p class="card-text">Và bản dịch tiếng Ba-na.</p>
+                  </div>
+                </div>
+                <!-- END SAMPLE CARD -->
+                <!-- START WORD CARD -->
+                <div id="word" class="card" style="display: none">
+                  <div class="card-body">
+                    <h2 id="card-vie"></h2>
+                    <h3 id="card-bah" class="card-subtitle mb-2 text-muted"></h3>
+                    <h6 id="pos"></h6>
+
+                    <span id="genderAsk">Chon giong doc<span>
+                    <select id="genderSelect" onchange="genderChangeHandler()">
+                      <option value="male">Male</option>
+                      <option value="female">Female</option>
+                    </select>
+
                     <div class="row my-2 justify-content-center">
-                      <button type="button" class="btn btn-primary w-50 text-left">🔊 Bình Định</button>
+                      <button id="bdButton" onclick="audioPlay()" type="button" class="btn btn-primary w-50 text-left">🔊 Bình Định</button>
                     </div>
                     <div class="row my-2 justify-content-center">
-                      <button type="button" class="btn btn-primary w-50 text-left">🔊 Kon Tum</button>
+                      <button id="ktButton" onclick="audioPlay()" type="button" class="btn btn-primary w-50 text-left">🔊 Kon Tum</button>
                     </div>
                     <div class="row my-2 justify-content-center">
-                      <button type="button" class="btn btn-primary w-50 text-left">🔊 Gia Lai</button>
+                      <button id="glButton" onclick="audioPlay()" type="button" class="btn btn-primary w-50 text-left">🔊 Gia Lai</button>
                     </div>
                   </div>
                 </div>
+                <!-- END WORD CARD -->
               </div>
             </div>
             
@@ -145,9 +163,6 @@
         </div>
       </div>
     </section>
-    <button type="submit" onclick="UserAction()">
-      Search
-    </button>
     <!-- Footer-->
     <footer class="bg-light py-5">
       <div class="container px-4 px-lg-5">
@@ -210,14 +225,55 @@
           const row = table.row(this).data();
           const myJSON = JSON.stringify(row);
           console.log(myJSON);
+
+          const myObj = JSON.parse(myJSON);
+          UPDATE_GLOBAL_MYOBJ(myObj)
+          updateSide(myObj)
         });
       });
-    </script>
-    <script>
-      const UserAction = async() => {
+      
+      // GLOBAL
+      let MYOBJ = undefined
+      let GENDER = document.getElementById('genderSelect').value
+      let SND = undefined;
+      const UPDATE_GLOBAL_MYOBJ = function(myObj) {
+        MYOBJ = myObj
+      }
+
+      const updateSide = (myObj) => {
+        //hide sample card (prompt for word choice)
+        document.getElementById('sample').setAttribute("style", "display: none")
+        //show word card (chosen word)
+        document.getElementById('word').setAttribute("style", "display: block")
+
+        //update info to card
+        document.getElementById('card-vie').innerHTML = myObj["vietnamese"]
+        document.getElementById('card-bah').innerHTML = myObj["bahnaric"]
+        document.getElementById('pos').innerHTML = myObj["pos"]
+        
+        //disable unavailable speech button
+        if (myObj["binhdinh"] === '-')
+          document.getElementById('bdButton').setAttribute("disabled", "")
+        else
+          document.getElementById('bdButton').removeAttribute("disabled")
+
+        if (myObj["gialai"] === '-')
+          document.getElementById('glButton').setAttribute("disabled", "")
+        else
+          document.getElementById('glButton').removeAttribute("disabled")
+
+        if (myObj["kontum"] === '-')
+          document.getElementById('ktButton').setAttribute("disabled", "")
+        else
+          document.getElementById('ktButton').removeAttribute("disabled")
+
+        callAPI()
+      }
+
+      const callAPI = async() => {
         const data = {
-          "text": "'bă tơnăi",
-          "gender": "male"
+          "text": MYOBJ["bahnaric"],
+          "gender": GENDER
         };
         const response = await fetch('https://www.ura.hcmut.edu.vn/tts/speak', {
           method: "POST",
@@ -226,14 +282,23 @@
           body: JSON.stringify(data),
           
         });
-      const responseJson = await response.json();
-      const testVar = JSON.stringify(responseJson);
-      console.log(JSON.stringify(responseJson));
-      
-      const speechBase64 = responseJson["speech"];
-      
-      var snd = new Audio("data:audio/mp3;base64," + speechBase64);
-      snd.play();
+        const responseJson = await response.json();
+        const testVar = JSON.stringify(responseJson);
+        // console.log(JSON.stringify(responseJson));
+        
+        const speechBase64 = responseJson["speech"];
+        
+        SND = new Audio("data:audio/mp3;base64," + speechBase64);
+        console.log("Audio ready - Gender: " + GENDER) 
+      }
+
+      const audioPlay = () => {
+        SND.play();
+      }
+
+      const genderChangeHandler = () => {
+        GENDER = document.getElementById('genderSelect').value
+        callAPI()
       }
     </script>
   </body>
