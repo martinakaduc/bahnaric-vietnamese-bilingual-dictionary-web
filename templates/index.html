@@ -107,7 +107,7 @@
           <div class="col-lg-8-text-left">
             <div class="row align-middle">
               <div class="col-9">
-                <table id="data" class="table text-black mb-4 text-left">
+                <table id="data" class="table text-black mb-4 text-left table-hover">
                   <thead>
                     <tr class="text-primary">
                       <th>Tiếng Kinh</th>
@@ -145,6 +145,9 @@
         </div>
       </div>
     </section>
+    <button type="submit" onclick="UserAction()">
+      Search
+    </button>
     <!-- Footer-->
     <footer class="bg-light py-5">
       <div class="container px-4 px-lg-5">
@@ -205,11 +208,33 @@
         });
         $("#data tbody").on("click", "tr", function () {
           const row = table.row(this).data();
-          console.log(row);
           const myJSON = JSON.stringify(row);
           console.log(myJSON);
         });
       });
+    </script>
+    <script>
+      const UserAction = async() => {
+        const data = {
+          "text": "'bă tơnăi",
+          "gender": "male"
+        };
+        const response = await fetch('https://www.ura.hcmut.edu.vn/tts/speak', {
+          method: "POST",
+          headers:{
+           "content-type":"application/json; charset=UTF-8"},
+          body: JSON.stringify(data),
+          
+        });
+      const responseJson = await response.json();
+      const testVar = JSON.stringify(responseJson);
+      console.log(JSON.stringify(responseJson));
+      
+      const speechBase64 = responseJson["speech"];
+      
+      var snd = new Audio("data:audio/mp3;base64," + speechBase64);
+      snd.play();
+      }
     </script>
   </body>
 </html>
