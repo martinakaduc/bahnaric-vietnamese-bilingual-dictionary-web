@@ -4,7 +4,7 @@ import os
 app = Flask(__name__)
 
 dir = os.path.dirname(__file__)
-db_path = os.path.join(dir, 'database.db')
+db_path = os.path.join(dir, 'vie_database.db')
 
 # the name of the database; add path if necessary
 db_name = 'D:\Developer\datatable_corpora\database.db'
