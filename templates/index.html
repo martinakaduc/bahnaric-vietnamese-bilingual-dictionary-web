@@ -42,6 +42,10 @@
       href="{{ url_for('static', filename='css/styles.css') }}"
       rel="stylesheet"
     />
+    <link
+      href="{{ url_for('static', filename='css/main.css') }}"
+      rel="stylesheet"
+    />
   </head>
   <body id="ura-parallel-corpora">
     <!-- Navigation-->
@@ -98,7 +102,7 @@
         </div>
       </div>
     </header>
-    <!--Kinh- Bana-->
+    <!--Kinh - Bana-->
     <section class="page-section" id="kinh-bana">
       <div class="container px-4 px-lg-5">
         <h2 class="text-center mt-0">Ngữ liệu Kinh Ba-na</h2>
@@ -125,33 +129,43 @@
                 <!-- START SAMPLE CARD -->
                 <div id="sample" class="card">
                   <div class="card-body">
-                    <h2 id="card-">Chọn một từ</h2>
+                    <h2 id="card-title">Chọn một từ</h2>
                     <h6 class="card-subtitle mb-2 text-muted">Để hiển thị từ loại</h6>
                     <p class="card-text">Và bản dịch tiếng Ba-na.</p>
                   </div>
                 </div>
                 <!-- END SAMPLE CARD -->
                 <!-- START WORD CARD -->
-                <div id="word" class="card" style="display: none">
+                <div id="word" class="card visually-hidden">
                   <div class="card-body">
                     <h2 id="card-vie"></h2>
                     <h3 id="card-bah" class="card-subtitle mb-2 text-muted"></h3>
                     <h6 id="pos"></h6>
 
-                    <span id="genderAsk">Chọn giọng đọc<span>
-                    <select id="genderSelect" onchange="genderChangeHandler()">
-                      <option value="male">Nam</option>
-                      <option value="female">Nữ</option>
-                    </select>
+                    <div class="gender">
+                      <span id="genderAsk">Chọn giọng đọc:</span>
+                      <select id="genderSelect" class="form-select w-35 d-inline-block" onchange="genderChangeHandler()">
+                        <option value="male">Nam</option>
+                        <option value="female">Nữ</option>
+                      </select>
+                    </div>
 
-                    <div class="row my-2 justify-content-center">
-                      <button id="bdButton" onclick="audioPlay()" type="button" class="btn btn-primary w-50 text-left">🔊 Bình Định</button>
+                    <div id="card-button" class="visually-hidden">
+                      <div class="row my-2 justify-content-center">
+                        <button id="bdButton" onclick="speechPlay()" type="button" class="btn btn-primary w-50 text-left">🔊 Bình Định</button>
+                      </div>
+                      <div class="row my-2 justify-content-center">
+                        <button id="ktButton" onclick="speechPlay()" type="button" class="btn btn-primary w-50 text-left">🔊 Kon Tum</button>
+                      </div>
+                      <div class="row my-2 justify-content-center">
+                        <button id="glButton" onclick="speechPlay()" type="button" class="btn btn-primary w-50 text-left">🔊 Gia Lai</button>
+                      </div>
                     </div>
-                    <div class="row my-2 justify-content-center">
-                      <button id="ktButton" onclick="audioPlay()" type="button" class="btn btn-primary w-50 text-left">🔊 Kon Tum</button>
-                    </div>
-                    <div class="row my-2 justify-content-center">
-                      <button id="glButton" onclick="audioPlay()" type="button" class="btn btn-primary w-50 text-left">🔊 Gia Lai</button>
+                    
+                    <div id="card-button_loading" class="mx-auto mt-3">
+                      <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -242,9 +256,9 @@
 
       const updateSide = (myObj) => {
         //hide sample card (prompt for word choice)
-        document.getElementById('sample').setAttribute("style", "display: none")
+        document.getElementById('sample').classList.add('visually-hidden')
         //show word card (chosen word)
-        document.getElementById('word').setAttribute("style", "display: block")
+        document.getElementById('word').classList.remove('visually-hidden')
 
         //update info to card
         document.getElementById('card-vie').innerHTML = myObj["vietnamese"]
@@ -271,6 +285,8 @@
       }
 
       const callAPI = async() => {
+        loadSpeech()
+
         const data = {
           "text": MYOBJ["bahnaric"],
           "gender": GENDER
@@ -284,21 +300,38 @@
         });
         const responseJson = await response.json();
         const testVar = JSON.stringify(responseJson);
-        // console.log(JSON.stringify(responseJson));
         
         const speechBase64 = responseJson["speech"];
         
         SND = new Audio("data:audio/mp3;base64," + speechBase64);
-        console.log("Audio ready - Gender: " + GENDER) 
+
+        console.log("Audio ready - Gender: " + GENDER)
+        showSpeech()
       }
 
-      const audioPlay = () => {
+      const speechPlay = () => {
         SND.play();
       }
 
       const genderChangeHandler = () => {
         GENDER = document.getElementById('genderSelect').value
         callAPI()
+      }
+
+      const loadSpeech = () => {
+        //hide button
+        document.getElementById('card-button').classList.add('visually-hidden')
+
+        //show loading icon
+        document.getElementById('card-button_loading').classList.remove('visually-hidden')
+      }
+
+      const showSpeech = () => {
+        //show button
+        document.getElementById('card-button').classList.remove('visually-hidden')
+
+        //hide loading icon
+        document.getElementById('card-button_loading').classList.add('visually-hidden')
       }
     </script>
   </body>
