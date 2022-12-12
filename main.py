@@ -70,6 +70,7 @@ def data():
     if search:
         query = query.filter(db.or_(
             VietnameseToBahnaric.vietnamese.like(f'%{search}%'),
+            VietnameseToBahnaric.pos.like(f'%{search}%'),
         ))
     total_filtered = query.count()
     
