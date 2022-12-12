@@ -1,6 +1,8 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 import os
+import base64
+import random
 app = Flask(__name__)
 
 dir = os.path.dirname(__file__)
@@ -83,5 +85,82 @@ def data():
         'recordsTotal': VietnameseToBahnaric.query.count(),
         'draw': request.args.get('draw', type=int),
     }
+
+@app.route('/api/bahna')
+def dataBahna():
+    query = VietnameseToBahnaric.query
+    # search filter
+    search = request.args.get('search[value]')
+    if search:
+        query = query.filter(db.or_(
+            VietnameseToBahnaric.bahnaric.like(f'%{search}%'),
+        ))
+    total_filtered = query.count()
+    
+    # pagination
+    start = request.args.get('start', type=int)
+    length = request.args.get('length', type=int)
+    query = query.offset(start).limit(length)
+    
+    #response
+    return {
+        'data': [word.to_dict() for word in query],
+        'recordsFiltered': total_filtered,
+        'recordsTotal': VietnameseToBahnaric.query.count(),
+        'draw': request.args.get('draw', type=int),
+    }
+
+bana_bd = "./static/assets/audio/Bana-BinhDinh/audio_by_word"
+bana_kt = "./static/assets/audio/Bana-KonTum/audio_by_word"
+bana_gl = "./static/assets/audio/Bana-GiaLai/audio_by_word"
+
+@app.route('/audio/<region_tag>/<word>', methods=['GET'])
+def audio(region_tag, word):
+    dirr = ''
+    fn = ''
+
+    if region_tag == "BD":
+        dirr = os.path.join(bana_bd, word)
+
+    elif region_tag == "KT":
+        dirr = os.path.join(bana_kt, word)
+
+    elif region_tag == "GL":
+        dirr = os.path.join(bana_gl, word)
+
+    dirr = dirr.strip()
+    print('1', dirr)
+    print('2', os.listdir(dirr))
+    print('3', os.path.join(dirr, '047.mp3'))
+    list_files = os.listdir(dirr)
+    fn = random.choice(list_files)
+
+    return send_from_directory(dirr, fn)
+
+# @app.route('/api/bahna')
+# def data_bahna():
+#     query = BahnaricToVietnamese.query
+#     # search filter
+#     search = request.args.get('search[value]')
+#     if search:
+#         query = query.filter(db.or_(
+#             BahnaricToVietnamese.bahnaric.like(f'%{search}%'),
+#         ))
+#     total_filtered = query.count()
+    
+#     # pagination
+#     start = request.args.get('start', type=int)
+#     length = request.args.get('length', type=int)
+#     query = query.offset(start).limit(length)
+    
+#     #response
+#     return {
+#         'data': [word.to_dict() for word in query],
+#         'recordsFiltered': total_filtered,
+#         'recordsTotal': BahnaricToVietnamese.query.count(),
+#         'draw': request.args.get('draw', type=int),
+#     }
+
+
 if __name__ == '__main__':
     app.run(debug=True)
