@@ -37,10 +37,10 @@
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ms-auto my-2 my-lg-0">
           <li class="nav-item">
-            <a class="nav-link" href="#data">Ngữ liệu Kinh - Ba-na</a>
+            <a class="nav-link" href="#kinh-title">Ngữ liệu Kinh - Ba-na</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#data2">Ngữ liệu Ba-na - Kinh</a>
+            <a class="nav-link" href="#bahnar-title">Ngữ liệu Ba-na - Kinh</a>
           </li>
         </ul>
       </div>
@@ -69,13 +69,13 @@
   <!--Kinh - Bana-->
   <section class="page-section" id="kinh-bana">
     <div class="container px-4 px-lg-5">
-      <h2 class="text-center mt-0">Ngữ liệu Kinh Ba-na</h2>
+      <h2 id="kinh-title" class="text-center mt-0">Ngữ liệu Kinh Ba-na</h2>
       <hr class="divider" />
       <div class="row gx-4 gx-lg-5">
         <div class="col-lg-8-text-left">
           <div class="row align-middle">
             <div class="col-9">
-              <table id="data" class="table text-black mb-5 text-left table-hover">
+              <table id="kinh" class="table text-black mb-5 text-left table-hover">
                 <thead>
                   <tr class="text-primary">
                     <th>Tiếng Kinh</th>
@@ -89,8 +89,10 @@
                 <tbody></tbody>
               </table>
               <div style="height: 100px;"></div>
-              
-              <table id="data2" class="table text-black mt-5 mb-4 text-left table-hover">
+
+              <h2 id="bahnar-title" class="text-center mt-0">Ngữ liệu Ba-na Kinh</h2>
+              <hr class="divider" />
+              <table id="bahnar" class="table text-black mt-5 mb-4 text-left table-hover">
                 <thead>
                   <tr class="text-primary">
                     <th>Tiếng Ba-na</th>
@@ -180,7 +182,7 @@
     src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.js"></script>
   <script>
     $(document).ready(function () {
-      var table = $("#data").DataTable({
+      var table = $("#kinh").DataTable({
         ajax: "/api/data",
         serverSide: true,
         columns: [
@@ -209,7 +211,7 @@
       });
 
 
-      var table2 = $("#data2").DataTable({
+      var table2 = $("#bahnar").DataTable({
         ajax: "/api/bahna",
         serverSide: true,
         columns: [
@@ -236,8 +238,8 @@
           },
         },
       });
-      // $('#data th:nth-child(1), #data th:nth-child(2)').each(function () {
-      //   let title = $('#data thead th:nth-child(1), #data thead th:nth-child(2)').eq($(this).index()).text();
+      // $('#kinh th:nth-child(1), #kinh th:nth-child(2)').each(function () {
+      //   let title = $('#kinh thead th:nth-child(1), #kinh thead th:nth-child(2)').eq($(this).index()).text();
       //   $(this).html('<input type="text"/>')
       // })
 
@@ -251,7 +253,7 @@
       //   })
       // })
 
-      $("#data tbody").on("click", "tr", function () {
+      $("#kinh tbody").on("click", "tr", function () {
         const row = table.row(this).data();
         const myJSON = JSON.stringify(row);
         // console.log(myJSON);
