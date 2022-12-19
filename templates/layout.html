@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Parallel Corpora</title>
+    <!-- DataTable-->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap5.css" />
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <!-- Bootstrap Icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Merriweather+Sans:400,700" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic"
+        rel="stylesheet" type="text/css" />
+    <!-- SimpleLightbox plugin CSS-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/SimpleLightbox/2.1.0/simpleLightbox.min.css" rel="stylesheet" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet" />
+</head>
+
+<body id="ura-parallel-corpora">
+    <!-- Navigation-->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand" href="#ura-parallel-corpora">URA Parallel Corpora</a>
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto my-2 my-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/kinh">Ngữ liệu Kinh - Ba-na</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/bahnar">Ngữ liệu Ba-na - Kinh</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    {% block body %} {% endblock %}
+
+    <!-- Footer-->
+    <footer class="bg-light py-5">
+        <div class="container px-4 px-lg-5">
+            <div class="small text-center text-muted">
+                Copyright &copy; 2022 - URA HCMUT
+            </div>
+        </div>
+    </footer>
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- SimpleLightbox plugin JS-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/SimpleLightbox/2.1.0/simpleLightbox.min.js"></script>
+    <!-- Core theme JS-->
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.js"></script>
+
+    {% block data %} {% endblock %}
+
+    <script>
+
+        // GLOBAL
+        let MYOBJ = undefined
+        let GENDER = document.getElementById('genderSelect').value
+        let SND = undefined;
+        let SND_BD = undefined;
+        let SND_KT = undefined;
+        let SND_GL = undefined;
+        let API_ERROR_EXIST = false;
+
+        const UPDATE_GLOBAL_MYOBJ = function (myObj) {
+            MYOBJ = myObj
+            console.log(myObj)
+        }
+
+        //Update sidecard when another word is toggled
+        const updateCard = (reverse) => {
+            //hide sample card (prompt for word choice)
+            document.getElementById('sample').classList.add('visually-hidden')
+            //show word card (chosen word)
+            document.getElementById('word').classList.remove('visually-hidden')
+
+            //update info to card
+            if (!reverse) {
+                document.getElementById('card-title').innerHTML = MYOBJ["vietnamese"]
+                document.getElementById('card-sub').innerHTML = MYOBJ["bahnaric"]
+            } else {
+                document.getElementById('card-title').innerHTML = MYOBJ["bahnaric"]
+                document.getElementById('card-sub').innerHTML = MYOBJ["vietnamese"]
+            }
+            document.getElementById('pos').innerHTML = MYOBJ["pos"]
+
+            prepAudio()
+        }
+
+        //Load the audio for toggled word
+        const prepAudio = () => {
+            //hide API error message
+            if (API_ERROR_EXIST)
+                document.getElementById('error').remove()
+            callAPI(function () {
+                if (MYOBJ["binhdinh"] === 'Y') {
+                    try {
+                        document.getElementById('sourceBD').setAttribute("src", `/audio/BD/${MYOBJ["bahnaric"]}`)
+                    }
+                    catch (error) {
+                        document.getElementById('sourceBD').setAttribute("src", 'data:audio/mp3;base64,' + speechBase64)
+                    }
+                }
+                else
+                    document.getElementById('sourceBD').setAttribute("src", 'data:audio/mp3;base64,' + speechBase64)
+
+                if (MYOBJ["kontum"] === 'Y') {
+                    try {
+                        document.getElementById('sourceKT').setAttribute("src", `/audio/KT/${MYOBJ["bahnaric"]}`)
+                    }
+                    catch (error) {
+                        document.getElementById('sourceKT').setAttribute("src", 'data:audio/mp3;base64,' + speechBase64)
+                    }
+                }
+                else
+                    document.getElementById('sourceKT').setAttribute("src", 'data:audio/mp3;base64,' + speechBase64)
+
+                if (MYOBJ["gialai"] === 'Y') {
+                    try {
+                        document.getElementById('sourceGL').setAttribute("src", `/audio/GL/${MYOBJ["bahnaric"]}`)
+                    }
+                    catch (error) {
+                        document.getElementById('sourceGL').setAttribute("src", 'data:audio/mp3;base64,' + speechBase64)
+                    }
+                }
+                else
+                    document.getElementById('sourceGL').setAttribute("src", 'data:audio/mp3;base64,' + speechBase64)
+
+                $('#audioBD').trigger('load')
+                $('#audioKT').trigger('load')
+                $('#audioGL').trigger('load')
+            })
+        }
+
+        //In case API took forever
+        async function fetchWithTimeout(resource, data, options = {}) {
+            const { timeout = 8000 } = options;
+
+            const controller = new AbortController();
+            const id = setTimeout(() => controller.abort(), timeout);
+            const response = await fetch(resource, {
+                method: "POST",
+                headers: {
+                    "content-type": "application/json; charset=UTF-8"
+                },
+                body: JSON.stringify(data),
+                options,
+                signal: controller.signal
+            });
+            clearTimeout(id);
+            return response;
+        }
+
+
+        let speechBase64
+        const callAPI = async (callback) => {
+            loadAudio()
+            console.log("Calling API")
+
+            try {
+                const data = {
+                    "text": MYOBJ["bahnaric"],
+                    "gender": GENDER
+                };
+
+                const response = await fetchWithTimeout('https://www.ura.hcmut.edu.vn/tts/speak', data, {
+                    timeout: 5000
+                });
+                const responseJson = await response.json();
+                const testVar = JSON.stringify(responseJson);
+
+                speechBase64 = responseJson["speech"];
+                
+                console.log("API ready - Gender: " + GENDER)
+                showAudio()
+                callback()
+            }
+            catch (error) {
+                console.log("API failed")
+                APIFailed()
+            }
+        }
+
+        //Prepare audio again when gender is changed
+        const genderChangeHandler = () => {
+            GENDER = document.getElementById('genderSelect').value
+            prepAudio()
+        }
+
+        //Show loading icon for audio
+        const loadAudio = () => {
+            //hide button
+            document.getElementById('card-button').classList.add('visually-hidden')
+
+            //show loading icon
+            document.getElementById('card-button_loading').classList.remove('visually-hidden')
+        }
+
+        //Show audio button
+        const showAudio = () => {
+            //show button
+            document.getElementById('card-button').classList.remove('visually-hidden')
+
+            //hide loading icon
+            document.getElementById('card-button_loading').classList.add('visually-hidden')
+        }
+
+        //Show error message when audio is failed to load
+        const APIFailed = () => {
+            //hide loading icon
+            API_ERROR_EXIST = true
+            document.getElementById('card-button_loading').classList.add('visually-hidden')
+
+            const errorMessage = document.createElement('p')
+            errorMessage.classList.add('mt-4')
+            errorMessage.setAttribute('id', 'error')
+            const errorContent = document.createTextNode('Audio failed to load!')
+            errorMessage.appendChild(errorContent)
+
+            const wordBody = document.getElementById('word-body')
+            wordBody.appendChild(errorMessage)
+        }
+    </script>
+
+    <audio preload="none" id="audioBD">
+        <source id="sourceBD" src="">
+    </audio>
+    <audio preload="none" id="audioKT">
+        <source id="sourceKT" src="">
+    </audio>
+    <audio preload="none" id="audioGL">
+        <source id="sourceGL" src="">
+    </audio>
+
+    <script>
+        // Play audio when button is pressed
+        function playBD() {
+            $('#audioBD').trigger('play')
+        }
+
+        function playKT() {
+            $('#audioKT').trigger('play')
+        }
+
+        function playGL() {
+            $('#audioGL').trigger('play')
+        }
+    </script>
+</body>
+
+</html>

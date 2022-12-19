@@ -1,0 +1,131 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<!--Kinh - Bana-->
+<section class="page-section" id="kinh-bahnar">
+    <div class="container px-4 px-lg-5">
+        <h2 id="kinh-title" class="text-center mt-0">Ngữ liệu Kinh Ba-na</h2>
+        <hr class="divider" />
+        <div class="row gx-4 gx-lg-5">
+            <div class="col-lg-8-text-left">
+                <div class="row align-middle">
+                    <div class="col-9">
+                        <table id="kinh" class="table text-black mb-5 text-left table-hover">
+                            <thead>
+                                <tr class="text-primary">
+                                    <th>Tiếng Kinh</th>
+                                    <th>Tiếng Ba-na</th>
+                                    <th>Từ loại</th>
+                                    <th>Bình Định</th>
+                                    <th>Kon Tum</th>
+                                    <th>Gia Lai</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <div style="height: 100px;"></div>
+                    </div>
+                    <div class="word-detail col-3 h-100">
+                        <!-- START SAMPLE CARD -->
+                        <div id="sample" class="card">
+                            <div class="card-body">
+                                <h2>Chọn một từ</h2>
+                                <h6 class="card-subtitle mb-2 text-muted">Để hiển thị từ loại</h6>
+                                <p class="card-text">Và bản dịch tiếng Ba-na.</p>
+                            </div>
+                        </div>
+                        <!-- END SAMPLE CARD -->
+                        <!-- START WORD CARD -->
+                        <div id="word" class="card visually-hidden">
+                            <div id="word-body" class="card-body">
+                                <h2 id="card-title"></h2>
+                                <h3 id="card-sub" class="card-subtitle mb-2 text-muted"></h3>
+                                <h6 id="pos"></h6>
+
+                                <div class="gender">
+                                    <span id="genderAsk">Chọn giọng đọc:</span>
+                                    <select id="genderSelect" class="form-select w-35 d-inline-block"
+                                        onchange="genderChangeHandler()">
+                                        <option value="male">Nam</option>
+                                        <option value="female">Nữ</option>
+                                    </select>
+                                </div>
+
+                                <div id="card-button" class="visually-hidden">
+                                    <div class="row my-2 justify-content-center">
+                                        <button id="bdButton" onclick="playBD()"
+                                            class="btn btn-primary w-50 text-left">🔊
+                                            Bình Định</button>
+                                    </div>
+                                    <div class="row my-2 justify-content-center">
+                                        <button id="ktButton" onclick="playKT()"
+                                            class="btn btn-primary w-50 text-left">🔊
+                                            Kon Tum</button>
+                                    </div>
+                                    <div class="row my-2 justify-content-center">
+                                        <button id="glButton" onclick="playGL()"
+                                            class="btn btn-primary w-50 text-left">🔊
+                                            Gia Lai</button>
+                                    </div>
+                                </div>
+
+                                <div id="card-button_loading" class="mx-auto mt-3">
+                                    <div class="spinner-border" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- END WORD CARD -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block data%}
+<script>
+    $(document).ready(function () {
+        var table = $("#kinh").DataTable({
+            ajax: "/api/kinh",
+            serverSide: true,
+            columns: [
+                { data: "vietnamese", orderable: false, width: "30%" },
+                { data: "bahnaric", orderable: false, width: "20%" },
+                { data: "pos", orderable: false, width: "10%" },
+                { data: "binhdinh", orderable: false },
+                { data: "kontum", orderable: false },
+                { data: "gialai", orderable: false },
+            ],
+            "order": [],
+            language: {
+                lengthMenu: "Hiển thị _MENU_ kết quả",
+                search: "Tìm kiếm tiếng Kinh:",
+                zeroRecords: "Không có dữ liệu",
+                info: "Trang _PAGE_/_PAGES_",
+                infoEmpty: "Không tìm thấy",
+                infoFiltered: "(tổng cộng _MAX_ kết quả)",
+                paginate: {
+                    first: "Trang đầu",
+                    previous: "Trang trước",
+                    next: "Trang sau",
+                    last: "Trang cuối",
+                },
+            },
+        });
+
+        $("#kinh tbody").on("click", "tr", function () {
+            const row = table.row(this).data();
+            const myJSON = JSON.stringify(row);
+            // console.log(myJSON);
+
+            const myObj = JSON.parse(myJSON);
+            UPDATE_GLOBAL_MYOBJ(myObj)
+            updateCard(0)
+        });
+    });
+</script>
+{% endblock %}

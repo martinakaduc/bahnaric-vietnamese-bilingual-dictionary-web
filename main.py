@@ -62,7 +62,16 @@ class BahnaricToVietnamese(db.Model):
 def index():
     return render_template('index.html')
 
-@app.route('/api/data')
+@app.route('/kinh')
+def kinh():
+    return render_template('kinh-bahnar.html')
+
+@app.route('/bahnar')
+def bahnar():
+    return render_template('bahnar-kinh.html')
+
+
+@app.route('/api/kinh')
 def data():
     query = VietnameseToBahnaric.query
     # search filter
@@ -87,7 +96,7 @@ def data():
         'draw': request.args.get('draw', type=int),
     }
 
-@app.route('/api/bahna')
+@app.route('/api/bahnar')
 def dataBahna():
     query = VietnameseToBahnaric.query
     # search filter
@@ -130,38 +139,10 @@ def audio(region_tag, word):
         dirr = os.path.join(bana_gl, word)
 
     dirr = dirr.strip()
-    print('1', dirr)
-    print('2', os.listdir(dirr))
-    print('3', os.path.join(dirr, '047.mp3'))
     list_files = os.listdir(dirr)
     fn = random.choice(list_files)
 
     return send_from_directory(dirr, fn)
-
-# @app.route('/api/bahna')
-# def data_bahna():
-#     query = BahnaricToVietnamese.query
-#     # search filter
-#     search = request.args.get('search[value]')
-#     if search:
-#         query = query.filter(db.or_(
-#             BahnaricToVietnamese.bahnaric.like(f'%{search}%'),
-#         ))
-#     total_filtered = query.count()
-    
-#     # pagination
-#     start = request.args.get('start', type=int)
-#     length = request.args.get('length', type=int)
-#     query = query.offset(start).limit(length)
-    
-#     #response
-#     return {
-#         'data': [word.to_dict() for word in query],
-#         'recordsFiltered': total_filtered,
-#         'recordsTotal': BahnaricToVietnamese.query.count(),
-#         'draw': request.args.get('draw', type=int),
-#     }
-
 
 if __name__ == '__main__':
     app.run(debug=True)
