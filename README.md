@@ -27,12 +27,12 @@ On Windows: `python -m venv venv`, then `venv\Scripts\activate` (try adding .bat
 
 After activation, you should see at least a `(venv)` at the far left side of your command prompt, indicating the activation of the virtual environment. Some text editors highlight this to another color. For example, on my Windows PC, I would see `(venv) PS D:\Developer\programming-integration-project-221>`
 
-## Install the dependencies
+### Install the dependencies
 Install the dependencies in the requirements.txt file in the **currently active** Python3 virtual environment. When it is not active, all the dependencies will not be available to you. This is ideal, because you would want to create different virtual environments for different Python project and need not to worry about updated libraries in the future breaking your (past) code.
 
 Do that by running `pip install -r requirements.txt`
 
-## Launch the project
+### Launch the project
 Execute `python main.py` and the development server at localhost:5000 will be availble. Ctrl + Click to open it up in your web browser.
 
 ## Troubleshooting
