@@ -35,5 +35,8 @@ Do that by running `pip install -r requirements.txt`
 ## Launch the project
 Execute `python main.py` and the development server at localhost:5000 will be availble. Ctrl + Click to open it up in your web browser.
 
+## Troubleshooting
+If you are on Windows and using VSCode as a code editor, it has Powershell as its default command prompt. It would have issues with the assets file, due to problems in the path. Switching to WSL command prompt and cloning like usual should resolve this problem, as the paths are fixed automatically. 
 
+Anyway, you could download a zip file of this repository and worry not about the issue!
 
