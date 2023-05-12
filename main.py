@@ -74,7 +74,6 @@ def bahnar():
 @app.route('/api/kinh')
 def data():
     query = VietnameseToBahnaric.query
-    total = query.count()
     # search filter
     search = request.args.get('search[value]')
     if search:
@@ -93,14 +92,13 @@ def data():
     return {
         'data': [word.to_dict() for word in query],
         'recordsFiltered': total_filtered,
-        'recordsTotal': total,
+        'recordsTotal': total_filtered,
         'draw': request.args.get('draw', type=int),
     }
 
 @app.route('/api/bahnar')
 def dataBahna():
     query = VietnameseToBahnaric.query
-    total = query.count()
     # search filter
     search = request.args.get('search[value]')
     if search:
