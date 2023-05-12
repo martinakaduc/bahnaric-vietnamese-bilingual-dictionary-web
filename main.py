@@ -9,8 +9,6 @@ dir = os.path.dirname(__file__)
 db_path = os.path.join(dir, 'vie_database.db')
 
 # the name of the database; add path if necessary
-# db_name = 'D:\Developer\datatable_corpora\database.db'
-new_db_name = 'C:/Users/hi/Desktop/Tudiendon/programming-integration-project-221-main/programming-integration-project-221-main/database.db'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + db_path
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'mysecretkey'
