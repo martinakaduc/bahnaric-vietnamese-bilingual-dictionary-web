@@ -5,8 +5,8 @@ import base64
 import random
 app = Flask(__name__)
 
-dir = os.path.dirname(__file__)
-db_path = os.path.join(dir, 'vie_database.db')
+dir_name = os.path.dirname(os.path.abspath(__file__))
+db_path = os.path.join(dir_name, 'vie_database.db')
 
 # the name of the database; add path if necessary
 db_name = 'D:\Developer\datatable_corpora\database.db'
@@ -16,7 +16,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'mysecretkey'
 # this variable, db, will be used for all SQLAlchemy commands
 db = SQLAlchemy(app)
-
+print("path:=>" + db_path)
 # each table in the database needs a class to be created for it
 # db.Model is required - don't change it
 # identify all columns by name and data type
@@ -74,6 +74,7 @@ def bahnar():
 @app.route('/api/kinh')
 def data():
     query = VietnameseToBahnaric.query
+    total = query.count()
     # search filter
     search = request.args.get('search[value]')
     if search:
@@ -92,13 +93,14 @@ def data():
     return {
         'data': [word.to_dict() for word in query],
         'recordsFiltered': total_filtered,
-        'recordsTotal': VietnameseToBahnaric.query.count(),
+        'recordsTotal': total,
         'draw': request.args.get('draw', type=int),
     }
 
 @app.route('/api/bahnar')
 def dataBahna():
     query = VietnameseToBahnaric.query
+    total = query.count()
     # search filter
     search = request.args.get('search[value]')
     if search:
@@ -116,7 +118,7 @@ def dataBahna():
     return {
         'data': [word.to_dict() for word in query],
         'recordsFiltered': total_filtered,
-        'recordsTotal': VietnameseToBahnaric.query.count(),
+        'recordsTotal': total_filtered,
         'draw': request.args.get('draw', type=int),
     }
 
@@ -145,4 +147,4 @@ def audio(region_tag, word):
     return send_from_directory(dirr, fn)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=10022, debug=False)
