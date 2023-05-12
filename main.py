@@ -39,6 +39,8 @@ class VietnameseToBahnaric(db.Model):
             'kontum': self.kontum,
             'gialai': self.gialai
         }
+
+
 class NglieuCauKHKT(db.Model):
     __tablename__ = 'KHKT'
     ID = db.Column(db.Integer, primary_key=True)
@@ -160,7 +162,6 @@ def data1():
 @app.route('/api/kinh')
 def data():
     query = VietnameseToBahnaric.query
-    total = query.count()
     # search filter
     search = request.args.get('search[value]')
     if search:
@@ -179,7 +180,7 @@ def data():
     return {
         'data': [word.to_dict() for word in query],
         'recordsFiltered': total_filtered,
-        'recordsTotal': total,
+        'recordsTotal': total_filtered,
         'draw': request.args.get('draw', type=int),
     }
 
@@ -203,7 +204,7 @@ def dataBahna():
     return {
         'data': [word.to_dict() for word in query],
         'recordsFiltered': total_filtered,
-        'recordsTotal': VietnameseToBahnaric.query.count(),
+        'recordsTotal': total_filtered,
         'draw': request.args.get('draw', type=int),
     }
 
