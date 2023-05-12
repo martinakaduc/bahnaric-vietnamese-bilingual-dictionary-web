@@ -1,0 +1,80 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<!--Kinh - Bana-->
+<section class="page-section" id="kinh-bahnar">
+    <div class="container px-4 px-lg-5">
+        <h2 id="kinh-title" class="text-center mt-0">Ngữ liệu câu Kinh Ba-na</h2>
+        <hr class="divider" />
+        <div class="row gx-4 gx-lg-5">
+            <div class="col-lg-8-text-left">
+                <div class="row align-middle">
+                    <div class="col-9">
+                        <table id="nglieucauKHKT" class="table text-black mb-5 text-left table-hover">
+                            <thead>
+                                <tr class="text-primary">
+                                    <th>Tiếng Kinh</th>
+                                    <th>Tiếng Ba-na</th>
+
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <div style="height: 100px;"></div>
+                    </div>
+                    <div class="word-detail col-3 h-100">
+                        <!-- START SAMPLE CARD -->
+
+                        <!-- END SAMPLE CARD -->
+                        <!-- START WORD CARD -->
+
+                        <!-- END WORD CARD -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block data%}
+<script>
+    $(document).ready(function () {
+        var table = $("#nglieucauKHKT").DataTable({
+            ajax: "/bahnar/bilingual-dictionary/api/nglieucauKHKT",
+            serverSide: true,
+            columns: [
+                { data: "vietnamese", orderable: false, width: "30%" },
+                { data: "bahnaric", orderable: false, width: "20%" },
+
+            ],
+            "order": [],
+            language: {
+                lengthMenu: "Hiển thị _MENU_ kết quả",
+                search: "Tìm kiếm tiếng Kinh:",
+                zeroRecords: "Không có dữ liệu",
+                info: "Trang _PAGE_/_PAGES_",
+                infoEmpty: "Không tìm thấy",
+                infoFiltered: "(tổng cộng _MAX_ kết quả)",
+                paginate: {
+                    first: "Trang đầu",
+                    previous: "Trang trước",
+                    next: "Trang sau",
+                    last: "Trang cuối",
+                },
+            },
+        });
+
+        $("#nglieucauKHKT tbody").on("click", "tr", function () {
+            const row = table.row(this).data();
+            const myJSON = JSON.stringify(row);
+            // console.log(myJSON);
+
+            const myObj = JSON.parse(myJSON);
+            UPDATE_GLOBAL_MYOBJ(myObj)
+            updateCard(0)
+        });
+    });
+</script>
+{% endblock %}

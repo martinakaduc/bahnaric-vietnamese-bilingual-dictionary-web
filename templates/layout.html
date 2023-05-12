@@ -42,6 +42,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/bahnar/bilingual-dictionary/bahnar">Ngữ liệu Ba-na - Kinh</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/bahnar/bilingual-dictionary/nglieucauKHKT">Ngữ liệu câu</a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -190,7 +193,7 @@
                 const testVar = JSON.stringify(responseJson);
 
                 speechBase64 = responseJson["speech"];
-                
+
                 console.log("API ready - Gender: " + GENDER)
                 showAudio()
                 callback()
