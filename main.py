@@ -52,6 +52,7 @@ class NglieuCauKHKT(db.Model):
             'vietnamese': self.vietnamese,
             'bahnaric': self.bahnaric
         }
+    
 class NglieuCauKHCN(db.Model):
     __tablename__ = 'KHCN'
     ID = db.Column(db.Integer, primary_key=True)
@@ -89,7 +90,18 @@ class NglieuCauVHTT(db.Model):
             'bahnaric': self.bahnaric,
 
         }
-    
+class Vanbancau(db.Model):
+    __tablename__ = 'vanbancau'
+    ID = db.Column(db.Integer, primary_key=True)
+    vietnamese = db.Column(db.String)
+    bahnaric = db.Column(db.String)
+    def to_dict(self):
+        return{
+            'ID': self.ID,
+            'vietnamese': self.vietnamese,
+            'bahnaric': self.bahnaric,
+
+        }
 
 class BahnaricToVietnamese(db.Model):
     __tablename__ = 'bahnartovie'
@@ -128,6 +140,7 @@ def data1():
     khcn_query = NglieuCauKHCN.query
     ttcs_query = NglieuCauTTCS.query
     vhtt_query = NglieuCauVHTT.query
+    vbc_query = Vanbancau.query
     total_records = 0
     
     # search filter
@@ -137,15 +150,16 @@ def data1():
         khcn_query = khcn_query.filter(NglieuCauKHCN.vietnamese.like(f'%{search_value}%') | NglieuCauKHCN.bahnaric.like(f'%{search_value}%'))
         ttcs_query = ttcs_query.filter(NglieuCauTTCS.vietnamese.like(f'%{search_value}%') | NglieuCauTTCS.bahnaric.like(f'%{search_value}%'))
         vhtt_query = vhtt_query.filter(NglieuCauVHTT.vietnamese.like(f'%{search_value}%') | NglieuCauVHTT.bahnaric.like(f'%{search_value}%'))
+        vbc_query = vbc_query.filter(Vanbancau.vietnamese.like(f'%{search_value}%') | Vanbancau.bahnaric.like(f'%{search_value}%'))
         
     # combine results from all four tables
-    records_filtered = khkt_query.count() + khcn_query.count() + ttcs_query.count() + vhtt_query.count()
+    records_filtered = khkt_query.count() + khcn_query.count() + ttcs_query.count() + vhtt_query.count() + vbc_query.count()
     
     
     # pagination
     start = request.args.get('start', type=int)
     length = request.args.get('length', type=int)
-    combined_query = khkt_query.union_all(ttcs_query, vhtt_query, khcn_query)
+    combined_query = khkt_query.union_all(ttcs_query, vhtt_query, khcn_query, vbc_query)
     result = combined_query.offset(start).limit(length).all()
 
     # data = [record.to_dict() for record in khkt_query] + [record.to_dict() for record in ttcs_query] + [record.to_dict() for record in vhtt_query] + [record.to_dict() for record in khcn_query]
